@@ -22,7 +22,7 @@ WORKDIR /app/engine
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install --upgrade pip && \
-    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130 && \
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126 && \
     pip3 install -r requirements.txt huggingface_hub
 
 RUN useradd -m -s /bin/bash fishuser && chown -R fishuser:fishuser /app
