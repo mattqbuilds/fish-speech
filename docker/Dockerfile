@@ -21,11 +21,9 @@ RUN git clone --depth 1 https://github.com/fishaudio/fish-speech.git /app/engine
 WORKDIR /app/engine
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip3 install --upgrade pip && \
-    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126 && \
-    grep -v "torch" requirements.txt > requirements_notorch.txt && \
-    pip3 install -r requirements_notorch.txt && \
-    pip3 install huggingface_hub
+    pip3 install --upgrade pip uv && \
+    uv pip install --system torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126 && \
+    uv pip install --system -e ".[stable]"
 
 RUN useradd -m -s /bin/bash fishuser && chown -R fishuser:fishuser /app
 USER fishuser
