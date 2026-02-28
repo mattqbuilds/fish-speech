@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM nvidia/cuda:13.1.1-runtime-ubuntu22.04
+FROM nvidia/cuda:12.6.0-cudnn-runtime-ubuntu22.04
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ffmpeg git curl python3-pip python3-dev build-essential \
+    ffmpeg git curl python3-pip python3-dev build-essential portaudio19-dev \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf /usr/bin/python3 /usr/bin/python
 
@@ -21,9 +21,9 @@ RUN git clone --depth 1 https://github.com/fishaudio/fish-speech.git /app/engine
 WORKDIR /app/engine
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip3 install --upgrade pip uv && \
-    uv pip install --system torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126 && \
-    uv pip install --system -e ".[stable]"
+    pip3 install --upgrade pip && \
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126 && \
+    pip3 install -e ".[stable]" huggingface_hub
 
 RUN useradd -m -s /bin/bash fishuser && chown -R fishuser:fishuser /app
 USER fishuser
